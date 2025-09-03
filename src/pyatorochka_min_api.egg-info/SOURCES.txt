@@ -1,9 +1,0 @@
-LICENSE
-README.md
-pyproject.toml
-src/pyatorochka-min-api-zavorateam/__init__.py
-src/pyatorochka-min-api-zavorateam/main.py
-src/pyatorochka_min_api.egg-info/PKG-INFO
-src/pyatorochka_min_api.egg-info/SOURCES.txt
-src/pyatorochka_min_api.egg-info/dependency_links.txt
-src/pyatorochka_min_api.egg-info/top_level.txt
