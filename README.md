@@ -1,0 +1,151 @@
+# Pyatorochka Min API
+
+**Pyatorochka Min API** — это Python-библиотека для взаимодействия с API магазина «Пятёрочка». Она позволяет загружать данные о категориях и продуктах, а также предоставляет удобные методы для работы с этими данными.
+
+## Установка
+
+Установите пакет с помощью pip:
+
+```bash
+pip install pyatorochka-min-api
+```
+
+Или склонируйте репозиторий и установите вручную:
+
+```bash
+git clone https://github.com/zavorateam/pyatorochka-min-api.git
+cd pyatorochka-min-api
+pip install .
+```
+
+## Зависимости
+
+Для работы библиотеки необходим Python 3.6 и выше, а также библиотека `requests`. Все зависимости будут установлены автоматически при установке пакета.
+
+## Быстрое начало
+
+```python
+from pyatorochka_min_api import PyatorochkaMinApi
+
+# Создание экземпляра API
+api = PyatorochkaMinApi()
+
+# Получение всех категорий
+categories = api.get_categories()
+print(categories)
+
+# Получение продуктов для категории
+products = api.get_products('251C12946')
+print(products)
+
+# Получение продуктов со скидкой
+discounted_products = api.get_discounted_products()
+print(discounted_products)
+```
+
+## Основной функционал
+
+### 1. Загрузка данных
+
+- **Загрузка категорий:** Данные о категориях загружаются автоматически при первом вызове метода `get_categories()`.
+- **Загрузка продуктов:** Данные о продуктах загружаются при вызове метода `get_products(category_id)`.
+
+### 2. Методы API
+
+#### Получение категорий
+
+```python
+categories = api.get_categories()
+```
+
+Возвращает список всех категорий и их подкатегорий.
+
+#### Получение продуктов
+
+```python
+products = api.get_products('251C12946')
+```
+
+Возвращает список продуктов для заданной категории.
+
+#### Получение продуктов со скидкой
+
+```python
+discounted_products = api.get_discounted_products()
+```
+
+Возвращает список продуктов, на которые действует скидка.
+
+#### Получение фильтров для категории
+
+```python
+filters = api.get_filters_for_category('251C12946')
+```
+
+Возвращает список фильтров, доступных для заданной категории.
+
+#### Получение информации о продукте по PLU
+
+```python
+product = api.get_product_by_plu(3449078)
+```
+
+Возвращает информацию о продукте по его уникальному идентификатору (PLU).
+
+### 3. Примеры использования
+
+#### Пример 1: Получение всех категорий
+
+```python
+from pyatorochka_min_api import PyatorochkaMinApi
+
+api = PyatorochkaMinApi()
+categories = api.get_categories()
+
+for category in categories:
+    print(f"Category: {category['name']}")
+    for child in category['children']:
+        print(f"  Subcategory: {child['name']}")
+```
+
+#### Пример 2: Получение продуктов для категории
+
+```python
+products = api.get_products('251C12946')
+
+for product in products:
+    print(f"Product: {product['name']}, Price: {product['prices']['regular']}")
+```
+
+#### Пример 3: Получение продуктов со скидкой
+
+```python
+discounted_products = api.get_discounted_products()
+
+for product in discounted_products:
+    print(f"Discounted Product: {product['name']}, Discounted Price: {product['prices']['discount']}")
+```
+
+#### Пример 4: Получение фильтров для категории
+
+```python
+filters = api.get_filters_for_category('251C12946')
+
+for filter in filters:
+    print(f"Filter: {filter['name']}, Type: {filter['filter_type']}")
+```
+
+#### Пример 5: Получение информации о продукте по PLU
+
+```python
+product = api.get_product_by_plu(3449078)
+print(f"Product Name: {product['name']}, Price: {product['prices']['regular']}")
+```
+
+## Лицензия
+
+Этот проект лицензируется по лицензии MIT. Подробности смотрите в файле [LICENSE](LICENSE).
+
+## Контакты
+
+Если у вас есть вопросы или предложения, пожалуйста, свяжитесь с нами через [GitHub Issues](https://github.com/zavorateam/pyatorochka-min-api/issues).
