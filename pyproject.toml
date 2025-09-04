@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools >= 77.0.3", "requests", "pandas", "urllib3", "bs4", "json", "re", "urllib"]
+requires = ["setuptools >= 77.0.3", "requests", "pandas", "urllib3", "bs4"]
 build-backend = "setuptools.build_meta"
 [project]
 name = "magnit-pure-api"
