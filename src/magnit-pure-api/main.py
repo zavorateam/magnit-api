@@ -246,13 +246,3 @@ class MagnitApi:
             json.dump(all_products, f, ensure_ascii=False, indent=4)
 
         return all_products
-
-
-if __name__ == "__main__":
-    urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-    shop_code = 771861
-    parser = MagnitApi('+79001234567', 'password', shop_code)
-
-    print(f"\nПарсим продукты для магазина {shop_code}")
-    output = "output.json"
-    parser.parse_products(shop_code, output, 12)

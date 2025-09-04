@@ -1,151 +1,128 @@
-# Pyatorochka Min API
+# Magnit Pure API
 
-**Pyatorochka Min API** — это Python-библиотека для взаимодействия с API магазина «Пятёрочка». Она позволяет загружать данные о категориях и продуктах, а также предоставляет удобные методы для работы с этими данными.
+**Magnit Pure API** — это Python-библиотека для работы с API и веб-ресурсами сети магазинов "Магнит". Она позволяет получать информацию о категориях и товарах, а также авторизовываться в системе.
+
+---
 
 ## Установка
 
-Установите пакет с помощью pip:
+### Требования
+
+* Python 3.9+
+* Установленные зависимости (см. ниже)
+
+### Установка через pip
 
 ```bash
 pip install pyatorochka-min-api
 ```
 
-Или склонируйте репозиторий и установите вручную:
+или вручную:
 
 ```bash
-git clone https://github.com/zavorateam/pyatorochka-min-api.git
-cd pyatorochka-min-api
-pip install .
+git clone https://github.com/ваш-репозиторий/magnit-pure-api.git
+cd magnit-pure-api
+pip install -r requirements.txt
 ```
 
-## Зависимости
+### Зависимости
 
-Для работы библиотеки необходим Python 3.6 и выше, а также библиотека `requests`. Все зависимости будут установлены автоматически при установке пакета.
+```
+requests>=2.31.0
+beautifulsoup4>=4.12.2
+pandas>=2.0.0
+urllib3>=2.0.0
+```
 
-## Быстрое начало
+---
+
+## Быстрый старт
+
+### Инициализация
 
 ```python
-from pyatorochka_min_api import PyatorochkaMinApi
+from magnit_api import MagnitApi
 
-# Создание экземпляра API
-api = PyatorochkaMinApi()
+# Инициализация с указанием телефона, пароля и кода магазина
+# Параметры burp_host и burp_port не используются в текущей версии
+api = MagnitApi(
+    phone="+79991234567",
+    password="your_password",
+    shop_code="12345"
+)
+```
 
-# Получение всех категорий
-categories = api.get_categories()
+---
+
+## Основные методы
+
+### 1. Авторизация
+
+```python
+if api.authorize():
+    print("Авторизация успешна!")
+else:
+    print("Ошибка авторизации.")
+```
+
+### 2. Получение списка категорий
+
+```python
+categories = api.get_categories(shop_code="12345")
 print(categories)
-
-# Получение продуктов для категории
-products = api.get_products('251C12946')
-print(products)
-
-# Получение продуктов со скидкой
-discounted_products = api.get_discounted_products()
-print(discounted_products)
 ```
 
-## Основной функционал
-
-### 1. Загрузка данных
-
-- **Загрузка категорий:** Данные о категориях загружаются автоматически при первом вызове метода `get_categories()`.
-- **Загрузка продуктов:** Данные о продуктах загружаются при вызове метода `get_products(category_id)`.
-
-### 2. Методы API
-
-#### Получение категорий
+### 3. Получение товаров по категории
 
 ```python
-categories = api.get_categories()
-```
-
-Возвращает список всех категорий и их подкатегорий.
-
-#### Получение продуктов
-
-```python
-products = api.get_products('251C12946')
-```
-
-Возвращает список продуктов для заданной категории.
-
-#### Получение продуктов со скидкой
-
-```python
-discounted_products = api.get_discounted_products()
-```
-
-Возвращает список продуктов, на которые действует скидка.
-
-#### Получение фильтров для категории
-
-```python
-filters = api.get_filters_for_category('251C12946')
-```
-
-Возвращает список фильтров, доступных для заданной категории.
-
-#### Получение информации о продукте по PLU
-
-```python
-product = api.get_product_by_plu(3449078)
-```
-
-Возвращает информацию о продукте по его уникальному идентификатору (PLU).
-
-### 3. Примеры использования
-
-#### Пример 1: Получение всех категорий
-
-```python
-from pyatorochka_min_api import PyatorochkaMinApi
-
-api = PyatorochkaMinApi()
-categories = api.get_categories()
-
-for category in categories:
-    print(f"Category: {category['name']}")
-    for child in category['children']:
-        print(f"  Subcategory: {child['name']}")
-```
-
-#### Пример 2: Получение продуктов для категории
-
-```python
-products = api.get_products('251C12946')
-
+products = api.get_products(
+    category_id="4226-molochnye-produkty", # у вас будет свой
+    shop_code="12345",
+    page=4
+)
 for product in products:
-    print(f"Product: {product['name']}, Price: {product['prices']['regular']}")
+    print(product['title'], product['sale_price'])
 ```
 
-#### Пример 3: Получение продуктов со скидкой
+### 4. Парсинг всех товаров и сохранение в JSON
 
 ```python
-discounted_products = api.get_discounted_products()
-
-for product in discounted_products:
-    print(f"Discounted Product: {product['name']}, Discounted Price: {product['prices']['discount']}")
+api.parse_products(
+    shop_code="12345",
+    output="products.json",
+    rpages=2  # количество страниц товаров для парсинга
+)
 ```
 
-#### Пример 4: Получение фильтров для категории
+---
+
+## Примеры использования
+
+### Пример 1: Получение всех категорий и товаров
 
 ```python
-filters = api.get_filters_for_category('251C12946')
-
-for filter in filters:
-    print(f"Filter: {filter['name']}, Type: {filter['filter_type']}")
+api = MagnitApi(phone="+79991234567", password="your_password", shop_code="12345")
+categories = api.get_categories("12345")
+for category in categories:
+    products = api.get_products(category, "12345", 1)
+    print(f"Категория: {category}, Товаров: {len(products)}")
 ```
 
-#### Пример 5: Получение информации о продукте по PLU
+### Пример 2: Сохранение данных в CSV
 
 ```python
-product = api.get_product_by_plu(3449078)
-print(f"Product Name: {product['name']}, Price: {product['prices']['regular']}")
+import pandas as pd
+
+api = MagnitApi(phone="+79991234567", password="your_password", shop_code="12345")
+products = api.parse_products("12345", "products.json", 2)
+df = pd.DataFrame(products)
+df.to_csv("products.csv", index=False)
 ```
 
-## Лицензия
+---
 
-Этот проект лицензируется по лицензии MIT. Подробности смотрите в файле [LICENSE](LICENSE).
+## Обработка ошибок
 
-## Контакты
-
-Если у вас есть вопросы или предложения, пожалуйста, свяжитесь с нами через [GitHub Issues](https://github.com/zavorateam/pyatorochka-min-api/issues).
+* Если авторизация не удалась, проверьте правильность телефона/пароля.
+* Если не удается получить данные, проверьте код магазина и интернет-соединение.
+* В текущей версии \*\*Burp\*\* прокси \*\*не используется\*\*
