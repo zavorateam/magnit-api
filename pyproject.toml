@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools >= 77.0.3", "requests", "pandas", "urllib3"]
+requires = ["setuptools >= 77.0.3", "requests", "pandas", "urllib3", "bs4", "json", "re", "urllib"]
 build-backend = "setuptools.build_meta"
 [project]
 name = "magnit-pure-api"
@@ -7,7 +7,7 @@ version = "0.4.1"
 authors = [
   { name="Zavorateam", email="renovvrhelp@gmail.com" }, { name="arzek6" },
 ]
-description = "Minimal Python Api for shop Pyatyorochka"
+description = "Minimal Python Api for shop Magnit"
 readme = "README.md"
 requires-python = ">=3.9"
 classifiers = [
